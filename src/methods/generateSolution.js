@@ -55,7 +55,7 @@ const shuffle = array => {
 
 let counter = 0;
 
-export function generateSolution(startingBoard) {
+export default function generateSolution(startingBoard) {
     const emptyCell = nextEmptyCell(startingBoard);
     if (!emptyCell) return startingBoard;
 

@@ -1,9 +1,10 @@
 import '../styles/Sudoku.css';
-import { generateSolution } from '../methods/generateSolution.js';
+import { generateSolution, generatePuzzle } from '../methods/index';
 import React, { useEffect, useState } from 'react'
 
 function Sudoku() {
-    const [puzzleData, setState] = useState([]);
+    const [solutionData, setSolution] = useState([]);
+    const [newPuzzle, setPuzzle] = useState([]);
     useEffect(() => {
         const board = () => {
             let result = [];
@@ -14,20 +15,22 @@ function Sudoku() {
         }
           
         const newBoard = board()
-        setState(generateSolution(newBoard))
+        const solution = generateSolution(newBoard);
+        setSolution(solution);
+        setPuzzle(generatePuzzle(solution));
       },[]);
-  
     return (
         <div>
             <ul>
                 {
-                    puzzleData.map((row, idx) => {
+                    newPuzzle.map((row, idx1) => {
                         return (
-                            row.map((box, idx) => {
+                            row.map((box, idx2) => {
+                                const id = idx1 + '-' + idx2;
                                 return (
                                     box === '-'
-                                    ? (<li key={idx}><span></span></li>)
-                                    : <li key={idx}><span>{box}</span></li>
+                                    ? (<li id={id} key={idx2}><span></span></li>)
+                                    : <li id={id} key={idx2}><span>{box}</span></li>
                                 )
                             })
                         )
