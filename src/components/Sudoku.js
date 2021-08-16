@@ -9,12 +9,12 @@ function Sudoku() {
         const board = () => {
             let result = [];
             for(let i = 0; i < 9; i++) {
-                result.push(new Array(9).fill(0))
+                result.push(new Array(9).fill(0));
             }
             return result;
         }
           
-        const newBoard = board()
+        const newBoard = board();
         const solution = generateSolution(newBoard);
         setSolution(solution);
         setPuzzle(generatePuzzle(solution));
@@ -29,8 +29,8 @@ function Sudoku() {
                                 const id = idx1 + '-' + idx2;
                                 return (
                                     box === '-'
-                                    ? (<li id={id} key={idx2}><span></span></li>)
-                                    : <li id={id} key={idx2}><span>{box}</span></li>
+                                    ? (<li key={idx2}><span id={id} ></span></li>)
+                                    : <li key={idx2}><span id={id} >{box}</span></li>
                                 )
                             })
                         )
