@@ -3,8 +3,9 @@ import { generateSolution, generatePuzzle } from '../methods/index';
 import React, { useEffect, useState } from 'react'
 
 function Sudoku() {
-    const [solutionData, setSolution] = useState([]);
+    const [solution, setSolution] = useState([]);
     const [newPuzzle, setPuzzle] = useState([]);
+    const [solutionData, setSolutionData] = useState({});
     useEffect(() => {
         const board = () => {
             let result = [];
@@ -19,6 +20,26 @@ function Sudoku() {
         setSolution(solution);
         setPuzzle(generatePuzzle(solution));
       },[]);
+
+      const handleOnChange = (e) => {
+          let value = e.target.value;
+          const id = e.target.id;
+          let input = document.getElementById(id);
+          if (!value || !Number.isInteger(Number(value))) {
+            input.value = null;
+            return;
+          };
+
+          if (value > 9) {
+            value = 9
+          }
+          if (value < 1) {
+            value = 1
+          }
+          input.value = value;
+          solutionData[id] = Number(value);
+          setSolutionData(solutionData);
+      }
     return (
         <div>
             <ul>
@@ -29,8 +50,16 @@ function Sudoku() {
                                 const id = idx1 + '-' + idx2;
                                 return (
                                     box === '-'
-                                    ? (<li key={idx2}><span id={id} ></span></li>)
-                                    : <li key={idx2}><span id={id} >{box}</span></li>
+                                    ? (
+                                        <li key={idx2}>
+                                            <input
+                                                className='solution-inputs'
+                                                id={id}
+                                                onChange={handleOnChange}
+                                            >
+                                            </input>
+                                        </li>)
+                                    : <li className="given" key={idx2}><span id={id} >{box}</span></li>
                                 )
                             })
                         )
