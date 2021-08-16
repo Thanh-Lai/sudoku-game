@@ -19,27 +19,22 @@ function Sudoku() {
         const solution = generateSolution(newBoard);
         setSolution(solution);
         setPuzzle(generatePuzzle(solution));
-      },[]);
+    },[]);
 
-      const handleOnChange = (e) => {
-          let value = e.target.value;
-          const id = e.target.id;
-          let input = document.getElementById(id);
-          if (!value || !Number.isInteger(Number(value))) {
+    const handleOnChange = (e) => {
+        let value = e.target.value;
+        const id = e.target.id;
+        let input = document.getElementById(id);
+        if (!value || value > 9 || value < 1 || !Number.isInteger(Number(value))) {
             input.value = null;
-            return;
-          };
+            delete solutionData[id];
+        } else {
+            input.value = value;
+            solutionData[id] = Number(value);
+        }
+        setSolutionData(solutionData);
+    }
 
-          if (value > 9) {
-            value = 9
-          }
-          if (value < 1) {
-            value = 1
-          }
-          input.value = value;
-          solutionData[id] = Number(value);
-          setSolutionData(solutionData);
-      }
     return (
         <div>
             <ul>
