@@ -1,11 +1,12 @@
 import '../styles/Sudoku.css';
 import '../styles/Responsive.css';
 import { generateSolution, generatePuzzle, validatePuzzle } from '../methods/index';
-import React, { useEffect, useState } from 'react'
-import Grid from './Grid.js'
+import React, { useEffect, useState } from 'react';
+import Grid from './Grid.js';
+import Header from './Header.js';
+import Controls from './Controls.js';
 
 function Sudoku() {
-    const [solution, setSolution] = useState([]);
     const [puzzle, setPuzzle] = useState([]);
     const [solutionData, setSolutionData] = useState({});
     const [emptyBoxes, setEmptyBoxes] = useState(0);
@@ -14,7 +15,7 @@ function Sudoku() {
         createGame();
     },[]);
 
-    const createGame = () => {
+    const createGame = (difficulty='easy') => {
         clearGame();
         const board = () => {
             let result = [];
@@ -27,7 +28,8 @@ function Sudoku() {
         const newBoard = board();
         const solution = generateSolution(newBoard);
         const newPuzzle = generatePuzzle(solution, 'test');
-        setSolution(solution);
+        const difficultyLvl = document.getElementById('difficulty-lvl');
+        difficultyLvl.value = difficulty;
         setPuzzle(newPuzzle['board']);
         setEmptyBoxes(newPuzzle['emptyBoxes']);
     }
@@ -56,8 +58,6 @@ function Sudoku() {
         return board;
     }
 
-
-
     const handleOnChange = (e) => {
         let value = e.target.value;
         const id = e.target.id;
@@ -82,11 +82,19 @@ function Sudoku() {
             }
         }
     }
+
+    const selectDifficulty = () => {
+        const difficultyLvl = document.getElementById('difficulty-lvl').value;
+        createGame(difficultyLvl);
+    }
+
     return (
         <div>
+            <Header/>
+            <Controls selectDifficulty={selectDifficulty} />
             <Grid puzzle={puzzle} handleOnChange={handleOnChange} />
             <div>
-                <button onClick={createGame}>New Game</button>
+                <button onClick={() => createGame('easy')}>New Game</button>
                 <button onClick={clearGame}>Clear</button>
             </div>
             <div id='message'>
