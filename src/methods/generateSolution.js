@@ -1,11 +1,11 @@
 const rowSafe = (puzzleArray, emptyCell, num) => {
     return puzzleArray[ emptyCell.rowIndex ].indexOf(num) === -1;
 }
-   
+
 const colSafe = (puzzleArray, emptyCell, num) => {
     return !puzzleArray.some(row => row[ emptyCell.colIndex ] === num );
 }
-   
+
 const boxSafe = (puzzleArray, emptyCell, num) => {
     const boxStartRow = emptyCell.rowIndex - (emptyCell.rowIndex % 3);
     const boxStartCol = emptyCell.colIndex - (emptyCell.colIndex % 3);
