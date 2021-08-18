@@ -1,4 +1,5 @@
 import '../styles/Sudoku.css';
+import '../styles/Responsive.css';
 import { generateSolution, generatePuzzle, validatePuzzle } from '../methods/index';
 import React, { useEffect, useState } from 'react'
 import Grid from './Grid.js'
