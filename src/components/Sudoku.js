@@ -1,7 +1,7 @@
 import '../styles/Sudoku.css';
 import '../styles/Responsive.css';
 import { generateSolution, generatePuzzle, validatePuzzle } from '../methods/index';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import Grid from './Grid.js';
 import Header from './Header.js';
 import Controls from './Controls.js';
@@ -10,12 +10,15 @@ function Sudoku() {
     const [puzzle, setPuzzle] = useState([]);
     const [solutionData, setSolutionData] = useState({});
     const [emptyBoxes, setEmptyBoxes] = useState(0);
+    const [time, setTimer] = useState(0);
+    const timer = useRef(null);
     
     useEffect(() => {
         createGame();
     },[]);
 
     const createGame = (difficulty='easy') => {
+
         clearGame();
         const board = () => {
             let result = [];
@@ -32,6 +35,15 @@ function Sudoku() {
         difficultyLvl.value = difficulty;
         setPuzzle(newPuzzle['board']);
         setEmptyBoxes(newPuzzle['emptyBoxes']);
+        clearInterval(timer.current);
+        setTimer(0); 
+        startTimer();
+    }
+    
+    const startTimer = () => {
+        timer.current = setInterval(() => {
+            setTimer(time => time+1);
+        }, 1000);
     }
 
     const clearGame = () => {
@@ -69,12 +81,10 @@ function Sudoku() {
             input.value = value;
             solutionData[id] = Number(value);
         }
-
         setSolutionData(solutionData);
         if (Object.keys(solutionData).length == emptyBoxes) {
             const validSolution = validatePuzzle(convertData());
             const msgBox = document.getElementById('message');
-
             if (validSolution) {
                 msgBox.innerText = 'congrats';
             } else {
@@ -91,7 +101,7 @@ function Sudoku() {
     return (
         <div>
             <Header/>
-            <Controls selectDifficulty={selectDifficulty} />
+            <Controls selectDifficulty={selectDifficulty} time={time}/>
             <Grid puzzle={puzzle} handleOnChange={handleOnChange} />
             <div>
                 <button onClick={() => createGame('easy')}>New Game</button>
