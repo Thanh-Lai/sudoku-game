@@ -1,4 +1,5 @@
 import React from 'react';
+import '../styles/Controls.css';
 
 function Controls({selectDifficulty, time}) {
     let hours = Math.floor(time / 3600);
@@ -21,9 +22,16 @@ function Controls({selectDifficulty, time}) {
                     <option id="hard"  value="hard">Hard</option>
                 </select>
             </div>
-            <div lassName="control-class" style={{width: '100px'}}>
-                <strong>Time:&nbsp;&nbsp;</strong>
-                {timeGetter()}
+            <div id="timer" className="control-class">
+                <strong >Time:&nbsp;&nbsp;</strong>
+                <p id="time">{timeGetter()}</p>
+            </div>
+            <div id="auto-correct" className="control-class">
+                Auto-Correct:
+                <label class="switch" >
+                    <input type="checkbox"></input>
+                    <span class="slider round"></span>
+                </label>
             </div>
         </div>
     )

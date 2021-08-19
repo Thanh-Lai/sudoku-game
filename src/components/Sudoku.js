@@ -30,7 +30,7 @@ function Sudoku() {
           
         const newBoard = board();
         const solution = generateSolution(newBoard);
-        const newPuzzle = generatePuzzle(solution, 'test');
+        const newPuzzle = generatePuzzle(solution, difficulty);
         const difficultyLvl = document.getElementById('difficulty-lvl');
         difficultyLvl.value = difficulty;
         setPuzzle(newPuzzle['board']);

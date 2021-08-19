@@ -78,12 +78,3 @@ input::-webkit-inner-spin-button {
 input[type=number] {
   -moz-appearance: textfield;
 }
-
-#controls {
-    display: inline-flex;
-    padding-right: 30px;
-}
-
-.control-class {
-    padding-right: 30px;
-}
