@@ -7,6 +7,7 @@ import Header from './Header.js';
 import Controls from './Controls.js';
 
 function Sudoku() {
+    const [solution, setSolution] = useState([]);
     const [puzzle, setPuzzle] = useState([]);
     const [solutionData, setSolutionData] = useState({});
     const [emptyBoxes, setEmptyBoxes] = useState(0);
@@ -18,8 +19,9 @@ function Sudoku() {
     },[]);
 
     const createGame = (difficulty='easy') => {
-
         clearGame();
+        document.getElementById('auto-correct-check').checked = false;
+        isAutoComplete(false);
         const board = () => {
             let result = [];
             for(let i = 0; i < 9; i++) {
@@ -27,12 +29,12 @@ function Sudoku() {
             }
             return result;
         }
-          
         const newBoard = board();
         const solution = generateSolution(newBoard);
         const newPuzzle = generatePuzzle(solution, difficulty);
         const difficultyLvl = document.getElementById('difficulty-lvl');
         difficultyLvl.value = difficulty;
+        setSolution(solution);
         setPuzzle(newPuzzle['board']);
         setEmptyBoxes(newPuzzle['emptyBoxes']);
         clearInterval(timer.current);
@@ -52,6 +54,7 @@ function Sudoku() {
             box.value = null;
         }
         setSolutionData({});
+        isAutoComplete(false, true);
         const msgBox = document.getElementById('message');
         msgBox.innerText = '';
     }
@@ -82,13 +85,34 @@ function Sudoku() {
             solutionData[id] = Number(value);
         }
         setSolutionData(solutionData);
-        if (Object.keys(solutionData).length == emptyBoxes) {
-            const validSolution = validatePuzzle(convertData());
-            const msgBox = document.getElementById('message');
-            if (validSolution) {
-                msgBox.innerText = 'congrats';
+        isPuzzleComplete(Object.keys(solutionData), emptyBoxes);
+        isAutoComplete();
+    }
+
+    const isPuzzleComplete = (solution, emptyBoxes) => {
+        if (Object.keys(solution).length !== emptyBoxes) return;
+        const validSolution = validatePuzzle(convertData());
+        const msgBox = document.getElementById('message');
+        if (validSolution) {
+            msgBox.innerText = 'congrats';
+        } else {
+            msgBox.innerText = 'fail';
+        }
+    }
+    
+    const isAutoComplete = (autoCorrect, clear) => {
+        const isChecked = document.getElementById('auto-correct-check').checked;
+        for (let key in solutionData) {
+            const idxs = key.split('-');
+            const row = idxs[0];
+            const col = idxs[1];
+            if (solution[row][col] === solutionData[key]) continue;
+            if (!clear && (autoCorrect || isChecked)) {
+                document.getElementById(key).parentElement.style.backgroundColor = 'red';
+                document.getElementById(key).style.backgroundColor = 'red';
             } else {
-                msgBox.innerText = 'fail';
+                document.getElementById(key).parentElement.style.backgroundColor = 'white';
+                document.getElementById(key).style.backgroundColor = 'white';
             }
         }
     }
@@ -98,10 +122,18 @@ function Sudoku() {
         createGame(difficultyLvl);
     }
 
+    const handleAutoCorect = (e) => {
+        isAutoComplete(e.target.checked)
+    }
+
     return (
         <div>
             <Header/>
-            <Controls selectDifficulty={selectDifficulty} time={time}/>
+            <Controls 
+                selectDifficulty={selectDifficulty}
+                time={time}
+                handleAutoCorrect={handleAutoCorect}
+            />
             <Grid puzzle={puzzle} handleOnChange={handleOnChange} />
             <div>
                 <button onClick={() => createGame('easy')}>New Game</button>

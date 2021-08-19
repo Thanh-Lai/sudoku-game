@@ -1,7 +1,7 @@
 import React from 'react';
 import '../styles/Controls.css';
 
-function Controls({selectDifficulty, time}) {
+function Controls({selectDifficulty, time, handleAutoCorrect}) {
     let hours = Math.floor(time / 3600);
     let minutes = Math.floor(time / 60);
     let seconds = time - minutes * 60;
@@ -29,7 +29,7 @@ function Controls({selectDifficulty, time}) {
             <div id="auto-correct" className="control-class">
                 Auto-Correct:
                 <label class="switch" >
-                    <input type="checkbox"></input>
+                    <input id="auto-correct-check" onChange={handleAutoCorrect} type="checkbox"></input>
                     <span class="slider round"></span>
                 </label>
             </div>
