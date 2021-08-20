@@ -13,15 +13,13 @@ function Sudoku() {
     const [emptyBoxes, setEmptyBoxes] = useState(0);
     const [time, setTimer] = useState(0);
     const timer = useRef(null);
-    
+
     useEffect(() => {
         createGame();
     },[]);
 
-    const createGame = (difficulty='easy') => {
-        clearGame();
+    const createGame = (difficulty='easy', newGame=false) => {
         document.getElementById('auto-correct-check').checked = false;
-        isAutoComplete(false);
         const board = () => {
             let result = [];
             for(let i = 0; i < 9; i++) {
@@ -37,6 +35,7 @@ function Sudoku() {
         setSolution(solution);
         setPuzzle(newPuzzle['board']);
         setEmptyBoxes(newPuzzle['emptyBoxes']);
+        clearGame(newGame, refreshBoard(newPuzzle['board']));
         clearInterval(timer.current);
         setTimer(0); 
         startTimer();
@@ -48,15 +47,32 @@ function Sudoku() {
         }, 1000);
     }
 
-    const clearGame = () => {
+    const clearGame = (newGame, newBoard = {}) => {
         for (let id in solutionData) {
             const box = document.getElementById(id);
             box.value = null;
         }
         setSolutionData({});
-        isAutoComplete(false, true);
+        isAutoCorrect(true, true, newGame, newBoard);
         const msgBox = document.getElementById('message');
         msgBox.innerText = '';
+    }
+
+    const refreshBoard = (newPuzzle) => {
+        const obj = {};
+
+        for (let i = 0; i < 9; i++) {
+            for (let j = 0; j < 9; j++) {
+                const curr = newPuzzle[i][j];
+                const id = `${i}-${j}`;
+                if (curr === '-') {
+                    obj[id] = 'blank';
+                } else {
+                    obj[id] = 'given';
+                }
+            }
+        }
+        return obj;
     }
 
     const convertData = (data) => {
@@ -86,7 +102,8 @@ function Sudoku() {
         }
         setSolutionData(solutionData);
         isPuzzleComplete(Object.keys(solutionData), emptyBoxes);
-        isAutoComplete();
+        const isChecked = document.getElementById('auto-correct-check').checked;
+        isAutoCorrect(isChecked);
     }
 
     const isPuzzleComplete = (solution, emptyBoxes) => {
@@ -100,30 +117,31 @@ function Sudoku() {
         }
     }
     
-    const isAutoComplete = (autoCorrect, clear) => {
-        const isChecked = document.getElementById('auto-correct-check').checked;
-        for (let key in solutionData) {
+    const isAutoCorrect = (autoCorrect, clear = false, newGame = false, newBoard = {}) => {
+        const solutions = newGame ? newBoard : solutionData;
+        for (let key in solutions) {
             const idxs = key.split('-');
             const row = idxs[0];
             const col = idxs[1];
-            if (solution[row][col] === solutionData[key]) continue;
-            if (!clear && (autoCorrect || isChecked)) {
-                document.getElementById(key).parentElement.style.backgroundColor = 'red';
-                document.getElementById(key).style.backgroundColor = 'red';
+            const element = document.getElementById(key);
+            if ((!clear && autoCorrect) && solution[row][col] !== solutionData[key]) {
+                element.parentNode.style.backgroundColor = 'red';
+                element.style.backgroundColor = 'red';
             } else {
-                document.getElementById(key).parentElement.style.backgroundColor = 'white';
-                document.getElementById(key).style.backgroundColor = 'white';
+                const color = (newGame && solutions[key] === 'given') ? 'lightcyan' : 'white';
+                element.parentNode.style.backgroundColor = color;
+                element.style.backgroundColor = color;
             }
         }
     }
 
     const selectDifficulty = () => {
         const difficultyLvl = document.getElementById('difficulty-lvl').value;
-        createGame(difficultyLvl);
+        createGame(difficultyLvl, true);
     }
 
     const handleAutoCorect = (e) => {
-        isAutoComplete(e.target.checked)
+        isAutoCorrect(e.target.checked);
     }
 
     return (
@@ -136,8 +154,8 @@ function Sudoku() {
             />
             <Grid puzzle={puzzle} handleOnChange={handleOnChange} />
             <div>
-                <button onClick={() => createGame('easy')}>New Game</button>
-                <button onClick={clearGame}>Clear</button>
+                <button onClick={() => createGame('easy', true)}>New Game</button>
+                <button onClick={() => clearGame(false)}>Clear</button>
             </div>
             <div id='message'>
 

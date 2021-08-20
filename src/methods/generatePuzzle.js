@@ -21,17 +21,16 @@ var setDifficultyNumber = difficulty => {
 
 export default function generatePuzzle(board, difficulty) {
     let holesNumber = setDifficultyNumber(difficulty);
-    let holes = holesNumber;
-    let newBoard = board.map(function(arr) {
+    const holes = holesNumber;
+    const newBoard = board.map(function(arr) {
         return arr.slice();
     });
     while(holesNumber > 0) {
-        let i = Math.floor(Math.random() * 9);
-        let j = Math.floor(Math.random() * 9);
-
+        const i = Math.floor(Math.random() * 9);
+        const j = Math.floor(Math.random() * 9);
         if (newBoard[i][j] !== '-') {
-        newBoard[i][j] = '-';
-        holesNumber--;
+            newBoard[i][j] = '-';
+            holesNumber--;
         }
     }
     return {'board': newBoard, 'emptyBoxes': holes};

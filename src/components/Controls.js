@@ -28,9 +28,9 @@ function Controls({selectDifficulty, time, handleAutoCorrect}) {
             </div>
             <div id="auto-correct" className="control-class">
                 Auto-Correct:
-                <label class="switch" >
+                <label className="switch" >
                     <input id="auto-correct-check" onChange={handleAutoCorrect} type="checkbox"></input>
-                    <span class="slider round"></span>
+                    <span className="slider round"></span>
                 </label>
             </div>
         </div>
