@@ -53,6 +53,7 @@ function Sudoku() {
         for (let id in solutionData) {
             const box = document.getElementById(id);
             box.value = null;
+            disableNotes(box,id, true);
         }
         setSolutionData({});
         isAutoCorrect(true, true, newGame, newBoard);
@@ -134,11 +135,22 @@ function Sudoku() {
         setSolutionData(solutionData);
     }
 
-    const disableNotes = (input, id) => {
+    const disableNotes = (input, id, clear = false) => {
+        const notesGrid = document.getElementById(id+'_Grid');
+        if (clear) {
+            const notesGridNums = Array.from(notesGrid.children);
+            notesGridNums.forEach(num => {
+                const numClassList = num.classList;
+                if (numClassList.contains('show-num')) {
+                    num.classList.add('hide-num');
+                    num.classList.remove('show-num');
+                }
+            })
+        }
         input.classList.add('solution-inputs');
         input.classList.remove('mini-grid-inputs');
         input.parentNode.style.display = 'flex';
-        document.getElementById(id+'_Grid').style.display = 'none';
+        notesGrid.style.display = 'none';
     }
     const enableNotes = (input, id, value) => {
         if (!Number.isInteger(Number(value))) return;
