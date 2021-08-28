@@ -12,6 +12,7 @@ function Sudoku() {
     const [solutionData, setSolutionData] = useState({});
     const [emptyBoxes, setEmptyBoxes] = useState(0);
     const [time, setTimer] = useState(0);
+    const [notesStatus, setNotesStatus] = useState(false);
     const timer = useRef(null);
 
     useEffect(() => {
@@ -35,6 +36,7 @@ function Sudoku() {
         setSolution(solution);
         setPuzzle(newPuzzle['board']);
         setEmptyBoxes(newPuzzle['emptyBoxes']);
+        handleNotesToggle(true);
         clearGame(newGame, refreshBoard(newPuzzle['board']));
         clearInterval(timer.current);
         setTimer(0); 
@@ -84,7 +86,7 @@ function Sudoku() {
             const idxs = key.split('-');
             const row = idxs[0];
             const col = idxs[1];
-            board[row][col] = solutionData[key];
+            board[row][col] = solutionData[key]['value'];
         }
         return board;
     }
@@ -92,18 +94,71 @@ function Sudoku() {
     const handleOnChange = (e) => {
         let value = e.target.value;
         const id = e.target.id;
+        if (!solutionData[id]) {
+            solutionData[id] = {};
+        }
         let input = document.getElementById(id);
+        if (!solutionData[id]['mode']) {
+            solutionData[id]['mode'] = 'normal';
+            setSolutionData(solutionData);
+        }
+        toggleNotesDisplay(input, id, value);
+        if (solutionData[id]['mode'] === 'notes') return;
         if (!value || value > 9 || value < 1 || !Number.isInteger(Number(value))) {
             input.value = null;
             delete solutionData[id];
         } else {
             input.value = value;
-            solutionData[id] = Number(value);
+            if (!notesStatus) {
+                solutionData[id]['value'] = Number(value);
+                solutionData[id]['mode'] = 'normal';
+            }
         }
         setSolutionData(solutionData);
         isPuzzleComplete(Object.keys(solutionData), emptyBoxes);
         const isChecked = document.getElementById('auto-correct-check').checked;
         isAutoCorrect(isChecked);
+    }
+
+    const toggleNotesDisplay = (input, id, value) => {
+        solutionData[id] = {};
+        if (notesStatus) {
+            enableNotes(input, id, value);
+            input.value = null;
+            solutionData[id]['mode'] = 'notes';
+        } else {
+            disableNotes(input, id);
+            solutionData[id]['value'] = Number(value);
+            solutionData[id]['mode'] = 'normal';
+        }
+        setSolutionData(solutionData);
+    }
+
+    const disableNotes = (input, id) => {
+        input.classList.add('solution-inputs');
+        input.classList.remove('mini-grid-inputs');
+        input.parentNode.style.display = 'flex';
+        document.getElementById(id+'_Grid').style.display = 'none';
+    }
+    const enableNotes = (input, id, value) => {
+        if (!Number.isInteger(Number(value))) return;
+        if(value > 9 || value < 1) {
+            value = 1;
+        }
+        const num = document.getElementById(id+'_Grid'+value).classList;
+        if (num.contains('hide-num')) {
+            num.remove('hide-num');
+            num.add('show-num');
+            input.parentNode.style.backgroundColor = 'white';
+            input.style.backgroundColor = 'white';
+        } else {
+            num.add('hide-num');
+            num.remove('show-num');
+        }
+        input.classList.remove('solution-inputs');
+        input.classList.add('mini-grid-inputs');
+        input.parentNode.style.display = 'block';
+        document.getElementById(id+'_Grid').style.display = 'grid';
     }
 
     const isPuzzleComplete = (solution, emptyBoxes) => {
@@ -124,7 +179,7 @@ function Sudoku() {
             const row = idxs[0];
             const col = idxs[1];
             const element = document.getElementById(key);
-            if ((!clear && autoCorrect) && solution[row][col] !== solutionData[key]) {
+            if ((!clear && autoCorrect && solutionData[key]['mode'] === 'normal') && solution[row][col] !== solutionData[key]['value']) {
                 element.parentNode.style.backgroundColor = 'red';
                 element.style.backgroundColor = 'red';
             } else {
@@ -144,6 +199,23 @@ function Sudoku() {
         isAutoCorrect(e.target.checked);
     }
 
+    const handleNotesToggle = (newGame = false) => {
+        let currStatus = notesStatus;
+        if (newGame) {
+            currStatus = false;
+            setNotesStatus(currStatus);
+        } else {
+            currStatus = !currStatus;
+            setNotesStatus(currStatus);
+        }
+        const note = document.getElementById('pencil');
+        if (currStatus) {
+            note.style.backgroundColor = '#2196F3';
+        } else {
+            note.style.backgroundColor = 'grey';
+        }
+    }
+
     return (
         <div>
             <Header/>
@@ -151,6 +223,7 @@ function Sudoku() {
                 selectDifficulty={selectDifficulty}
                 time={time}
                 handleAutoCorrect={handleAutoCorect}
+                handleNotes={handleNotesToggle}
             />
             <Grid puzzle={puzzle} handleOnChange={handleOnChange} />
             <div>

@@ -1,8 +1,9 @@
 import React from 'react'
+import MiniGrid from './MiniGrid';
 
 function Grid({puzzle, handleOnChange}) {
     return (
-        <ul>
+        <ul hidden id="main-grid">
             {
                 puzzle.map((row, idx1) => {
                     return (
@@ -11,15 +12,16 @@ function Grid({puzzle, handleOnChange}) {
                             return (
                                 box === '-'
                                 ? (
-                                    <li key={idx2}>
+                                    <li className="main-list" key={idx2}>
+                                        <MiniGrid gridID={id+'_Grid'}/>
                                         <input
                                             className='solution-inputs'
                                             id={id}
-                                            onChange={handleOnChange}
+                                            onChange={(e) => handleOnChange(e)}
                                         >
                                         </input>
                                     </li>)
-                                : <li className="given" key={idx2}><span id={id} >{box}</span></li>
+                                : <li className="given main-list" key={idx2}><span id={id} >{box}</span></li>
                             )
                         })
                     )

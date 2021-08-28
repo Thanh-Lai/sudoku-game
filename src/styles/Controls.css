@@ -3,7 +3,7 @@
 }
 
 .control-class {
-    padding: 0 15px;
+    padding: 5px 15px;
     margin: 0 15px;
     width: '100px';
 }
@@ -22,7 +22,6 @@
     position: relative;
     display: inline-block;
     width: 60px;
-    height: 34px;
 }
   
 .switch input {
@@ -81,4 +80,14 @@ input:checked + .slider:before {
 
 #auto-correct {
     display: flex;
+    height: 25px;
+}
+
+#pencil {
+    background-color: grey;
+}
+
+#notes {
+    text-align: left;
+    margin-left: 30px;
 }

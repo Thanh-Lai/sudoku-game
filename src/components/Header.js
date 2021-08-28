@@ -4,7 +4,7 @@ function Header() {
     return (
         <div>
             <h2>
-            Play Sudoku
+            Sudoku Puzzle
             </h2>
             <p>In honor of&nbsp;
                 <a href="https://en.wikipedia.org/wiki/Maki_Kaji" rel="noreferrer" target="_blank">
