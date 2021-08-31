@@ -247,7 +247,7 @@ function Sudoku() {
                 handleAutoCorrect={handleAutoCorect}
                 handleNotes={handleNotesToggle}
             />
-            <Grid puzzle={puzzle} handleOnChange={handleOnChange} />
+            <Grid puzzle={puzzle} pause={pause} handleOnChange={handleOnChange} />
             <div>
                 <button onClick={() => createGame('easy', true)}>New Game</button>
                 <button onClick={() => clearGame(false)}>Clear</button>
