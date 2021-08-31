@@ -13,6 +13,7 @@ function Sudoku() {
     const [emptyBoxes, setEmptyBoxes] = useState(0);
     const [time, setTimer] = useState(0);
     const [notesStatus, setNotesStatus] = useState(false);
+    const [pause, setPause] = useState(false);
     const timer = useRef(null);
 
     useEffect(() => {
@@ -40,6 +41,7 @@ function Sudoku() {
         clearGame(newGame, refreshBoard(newPuzzle['board']));
         clearInterval(timer.current);
         setTimer(0); 
+        setPause(false);
         startTimer();
     }
     
@@ -153,10 +155,8 @@ function Sudoku() {
         notesGrid.style.display = 'none';
     }
     const enableNotes = (input, id, value) => {
-        if (!Number.isInteger(Number(value))) return;
-        if(value > 9 || value < 1) {
-            value = 1;
-        }
+        if (!Number.isInteger(Number(value)) || value > 9 || value < 1) return;
+
         const num = document.getElementById(id+'_Grid'+value).classList;
         if (num.contains('hide-num')) {
             num.remove('hide-num');
@@ -228,6 +228,16 @@ function Sudoku() {
         }
     }
 
+    const handlePause = function() {
+        const currStatus = !pause;
+        setPause(currStatus);
+        if (currStatus) {
+            clearInterval(timer.current);
+        } else {
+            startTimer();
+        }
+    }
+
     return (
         <div>
             <Header/>
@@ -241,6 +251,7 @@ function Sudoku() {
             <div>
                 <button onClick={() => createGame('easy', true)}>New Game</button>
                 <button onClick={() => clearGame(false)}>Clear</button>
+                <button onClick={handlePause}>Pause</button>
             </div>
             <div id='message'>
 
