@@ -104,6 +104,15 @@
     filter: blur(3px);
 }
 
+@keyframes hint {
+    0% {
+      background-color:white;
+    }
+    100% {
+      background-color: peru;
+    }
+  }
+
 .mini-grid-inputs {
     height: 12px;
     width: 50px;

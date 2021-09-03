@@ -22,6 +22,7 @@ var setDifficultyNumber = difficulty => {
 export default function generatePuzzle(board, difficulty) {
     let holesNumber = setDifficultyNumber(difficulty);
     const holes = holesNumber;
+    const blanks = [];
     const newBoard = board.map(function(arr) {
         return arr.slice();
     });
@@ -30,8 +31,9 @@ export default function generatePuzzle(board, difficulty) {
         const j = Math.floor(Math.random() * 9);
         if (newBoard[i][j] !== '-') {
             newBoard[i][j] = '-';
+            blanks.push([i,j])
             holesNumber--;
         }
     }
-    return {'board': newBoard, 'emptyBoxes': holes};
+    return {'board': newBoard, 'emptyBoxes': holes, 'blankBoxes': blanks};
 }

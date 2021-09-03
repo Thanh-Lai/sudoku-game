@@ -11,11 +11,12 @@ function Sudoku() {
     const [puzzle, setPuzzle] = useState([]);
     const [solutionData, setSolutionData] = useState({});
     const [emptyBoxes, setEmptyBoxes] = useState(0);
+    const [blankBoxes, setBlankBoxes] = useState([]);
     const [time, setTimer] = useState(0);
     const [notesStatus, setNotesStatus] = useState(false);
     const [pause, setPause] = useState(false);
+    const [hints, setHints] = useState({});
     const timer = useRef(null);
-
     useEffect(() => {
         createGame();
     },[]);
@@ -37,11 +38,13 @@ function Sudoku() {
         setSolution(solution);
         setPuzzle(newPuzzle['board']);
         setEmptyBoxes(newPuzzle['emptyBoxes']);
+        setBlankBoxes(newPuzzle['blankBoxes']);
         handleNotesToggle(true);
         clearGame(newGame, refreshBoard(newPuzzle['board']));
         clearInterval(timer.current);
         setTimer(0); 
         setPause(false);
+        setHints({})
         startTimer();
     }
     
@@ -80,7 +83,7 @@ function Sudoku() {
         return obj;
     }
 
-    const convertData = (data) => {
+    const convertData = () => {
         const board = puzzle.map(function(arr) {
             return arr.slice();
         });
@@ -118,7 +121,7 @@ function Sudoku() {
             }
         }
         setSolutionData(solutionData);
-        isPuzzleComplete(Object.keys(solutionData), emptyBoxes);
+        isPuzzleComplete();
         const isChecked = document.getElementById('auto-correct-check').checked;
         isAutoCorrect(isChecked);
     }
@@ -173,9 +176,9 @@ function Sudoku() {
         document.getElementById(id+'_Grid').style.display = 'grid';
     }
 
-    const isPuzzleComplete = (solution, emptyBoxes) => {
-        if (Object.keys(solution).length !== emptyBoxes) return;
-        const validSolution = validatePuzzle(convertData());
+    const isPuzzleComplete = () => {
+        if (Object.keys(solutionData).length !== emptyBoxes) return;
+        const validSolution = validatePuzzle(convertData()); 
         const msgBox = document.getElementById('message');
         if (validSolution) {
             msgBox.innerText = 'congrats';
@@ -191,7 +194,10 @@ function Sudoku() {
             const row = idxs[0];
             const col = idxs[1];
             const element = document.getElementById(key);
-            if ((!clear && autoCorrect && solutionData[key]['mode'] === 'normal') && solution[row][col] !== solutionData[key]['value']) {
+            if (
+                (!clear && autoCorrect && solutionData[key]['mode'] === 'normal')
+                && (solution[row][col] !== solutionData[key]['value'])
+                ) {
                 element.parentNode.style.backgroundColor = 'red';
                 element.style.backgroundColor = 'red';
             } else {
@@ -238,6 +244,50 @@ function Sudoku() {
         }
     }
 
+    const countCorrect = function() {
+        let count = 0;
+        for (let key in solutionData) {
+            const idxs = key.split('-');
+            const row = idxs[0];
+            const col = idxs[1];
+            if (solution[row][col] === solutionData[key]['value']) {
+                count += 1;
+            }
+        }
+        return count;
+    }
+
+    const handleHint = function() {
+        let correctAns = countCorrect();
+        let currBoxes = emptyBoxes - correctAns;
+
+        if (currBoxes === 1) return;
+        let currSolutions = JSON.parse(JSON.stringify(solutionData));
+        let currBlanks = [...blankBoxes];
+        let blank = currBlanks.pop();
+        let i = blank[0];
+        let j = blank[1];
+        let key = i+'-'+j;
+
+        while(currSolutions[key] && (currSolutions[key]['value'] === solution[i][j])) {
+            delete currSolutions[key];
+            blank = currBlanks.pop();
+            i = blank[0];
+            j = blank[1];
+            key = i+'-'+j;
+        }
+        hints[key] = puzzle[i][j] = solution[i][j];
+        delete solutionData[key];
+        currBoxes -= 1;
+        setHints(hints);
+        setPuzzle(puzzle);
+        setEmptyBoxes(emptyBoxes-1);
+        setBlankBoxes(currBlanks);
+        setSolutionData(solutionData);
+    }
+
+    const pausePlay = pause ? 'Play' : 'Pause';
+
     return (
         <div>
             <Header/>
@@ -247,11 +297,17 @@ function Sudoku() {
                 handleAutoCorrect={handleAutoCorect}
                 handleNotes={handleNotesToggle}
             />
-            <Grid puzzle={puzzle} pause={pause} handleOnChange={handleOnChange} />
+            <Grid
+                puzzle={puzzle}
+                pause={pause}
+                handleOnChange={handleOnChange}
+                hints={hints}
+            />
             <div>
                 <button onClick={() => createGame('easy', true)}>New Game</button>
                 <button onClick={() => clearGame(false)}>Clear</button>
-                <button onClick={handlePause}>Pause</button>
+                <button onClick={handlePause}>{pausePlay}</button>
+                <button onClick={handleHint}>Hint</button>
             </div>
             <div id='message'>
 
