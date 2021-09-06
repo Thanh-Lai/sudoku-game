@@ -11,12 +11,13 @@ function Sudoku() {
     const [puzzle, setPuzzle] = useState([]);
     const [solutionData, setSolutionData] = useState({});
     const [emptyBoxes, setEmptyBoxes] = useState(0);
-    const [blankBoxes, setBlankBoxes] = useState([]);
+    const [blankBoxes, setBlankBoxes] = useState({});
     const [time, setTimer] = useState(0);
     const [notesStatus, setNotesStatus] = useState(false);
     const [pause, setPause] = useState(false);
     const [hints, setHints] = useState({});
     const timer = useRef(null);
+    let initalBlankBoxs;
     useEffect(() => {
         createGame();
     },[]);
@@ -39,6 +40,7 @@ function Sudoku() {
         setPuzzle(newPuzzle['board']);
         setEmptyBoxes(newPuzzle['emptyBoxes']);
         setBlankBoxes(newPuzzle['blankBoxes']);
+        initalBlankBoxs = newPuzzle['blankBoxes'];
         handleNotesToggle(true);
         clearGame(newGame, refreshBoard(newPuzzle['board']));
         clearInterval(timer.current);
@@ -61,6 +63,7 @@ function Sudoku() {
             disableNotes(box,id, true);
         }
         setSolutionData({});
+        setBlankBoxes(initalBlankBoxs);
         isAutoCorrect(true, true, newGame, newBoard);
         const msgBox = document.getElementById('message');
         msgBox.innerText = '';
@@ -100,6 +103,10 @@ function Sudoku() {
     const handleOnChange = (e) => {
         let value = e.target.value;
         const id = e.target.id;
+        const key = id.split('-');
+        const i = Number(key[0]);
+        const j = Number(key[1]);
+
         if (!solutionData[id]) {
             solutionData[id] = {};
         }
@@ -113,13 +120,20 @@ function Sudoku() {
         if (!value || value > 9 || value < 1 || !Number.isInteger(Number(value))) {
             input.value = null;
             delete solutionData[id];
+            blankBoxes[id] = [i,j];
         } else {
             input.value = value;
             if (!notesStatus) {
                 solutionData[id]['value'] = Number(value);
                 solutionData[id]['mode'] = 'normal';
+                if (solution[i][j] === Number(value)) {
+                    delete blankBoxes[id];
+                } else {
+                    blankBoxes[id] = [i,j];
+                }
             }
         }
+        setBlankBoxes(blankBoxes);
         setSolutionData(solutionData);
         isPuzzleComplete();
         const isChecked = document.getElementById('auto-correct-check').checked;
@@ -128,15 +142,20 @@ function Sudoku() {
 
     const toggleNotesDisplay = (input, id, value) => {
         solutionData[id] = {};
+        const key = id.split('-');
+        const i = Number(key[0]);
+        const j = Number(key[1]);
         if (notesStatus) {
             enableNotes(input, id, value);
             input.value = null;
             solutionData[id]['mode'] = 'notes';
+            blankBoxes[id] = [i,j];
         } else {
             disableNotes(input, id);
             solutionData[id]['value'] = Number(value);
             solutionData[id]['mode'] = 'normal';
         }
+        setBlankBoxes(blankBoxes);
         setSolutionData(solutionData);
     }
 
@@ -180,6 +199,7 @@ function Sudoku() {
         if (Object.keys(solutionData).length !== emptyBoxes) return;
         const validSolution = validatePuzzle(convertData()); 
         const msgBox = document.getElementById('message');
+        clearInterval(timer.current);
         if (validSolution) {
             msgBox.innerText = 'congrats';
         } else {
@@ -258,26 +278,19 @@ function Sudoku() {
     }
 
     const handleHint = function() {
-        let correctAns = countCorrect();
-        let currBoxes = emptyBoxes - correctAns;
+        let currBlanks = Object.values(blankBoxes);
+        let currBoxes = emptyBoxes - countCorrect();
 
         if (currBoxes === 1) return;
-        let currSolutions = JSON.parse(JSON.stringify(solutionData));
-        let currBlanks = [...blankBoxes];
-        let blank = currBlanks.pop();
+        let blank = currBlanks.splice(Math.floor(Math.random() * currBlanks.length),1)[0];
+        if (!blank) return;
         let i = blank[0];
         let j = blank[1];
         let key = i+'-'+j;
 
-        while(currSolutions[key] && (currSolutions[key]['value'] === solution[i][j])) {
-            delete currSolutions[key];
-            blank = currBlanks.pop();
-            i = blank[0];
-            j = blank[1];
-            key = i+'-'+j;
-        }
         hints[key] = puzzle[i][j] = solution[i][j];
         delete solutionData[key];
+        delete blankBoxes[key];
         currBoxes -= 1;
         setHints(hints);
         setPuzzle(puzzle);
