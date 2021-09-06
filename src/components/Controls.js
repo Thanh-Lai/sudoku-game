@@ -37,7 +37,7 @@ function Controls({ selectDifficulty, time, handleAutoCorrect,handleNotes }) {
                         <span className="slider round"></span>
                     </label>
                 </div>
-                <div id="notes" >
+                <div id="notes" className="control-class">
                     <strong>Notes: </strong>
                     <button id="pencil" onClick={() => handleNotes(false)}>
                         <i className="fa fa-pencil"></i>

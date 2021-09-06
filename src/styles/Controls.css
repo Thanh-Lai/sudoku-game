@@ -80,7 +80,6 @@ input:checked + .slider:before {
 
 #auto-correct {
     display: flex;
-    height: 25px;
 }
 
 #pencil {
@@ -89,5 +88,4 @@ input:checked + .slider:before {
 
 #notes {
     text-align: left;
-    margin-left: 30px;
 }

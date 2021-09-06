@@ -94,12 +94,25 @@
     .mini-grid-inputs {
         bottom: 5px;
     }
+    .control-class {
+        padding: 0px 0px !important;
+        margin: 0px 5px !important;
+    }
+    #main-grid {
+        margin-top: 10px;
+    }
 }
 
 @media screen and (max-width:400px) {
     #main-grid {
         grid-template-columns: repeat(9, 2em);
         grid-template-rows: repeat(9, 2em);
+    }
+    #controls {
+        font-size: 12px;
+    }
+    #maki-kaji {
+        font-size: 12px;
     }
 }
 
@@ -110,5 +123,12 @@
     }
     .notes-grid {
         font-size: 6px;
+    }
+    .control-class {
+        margin: 0 !important;
+        text-align: left;
+    }
+    #controls {
+        display: inline-block !important;
     }
 }

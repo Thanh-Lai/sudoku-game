@@ -6,7 +6,7 @@ function Header() {
             <h2>
             Sudoku Puzzle
             </h2>
-            <p>In honor of&nbsp;
+            <p id="maki-kaji">In honor of&nbsp;
                 <a href="https://en.wikipedia.org/wiki/Maki_Kaji" rel="noreferrer" target="_blank">
                     <strong>Maki Kaji</strong>
                 </a>
