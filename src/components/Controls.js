@@ -6,6 +6,7 @@ function Controls({ selectDifficulty, time, handleAutoCorrect,handleNotes }) {
     let hours = date.getUTCHours();
     let minutes = date.getUTCMinutes();
     let seconds = date.getSeconds();
+    
     const timeGetter = () => {
         hours = hours < 10 ? '0'+ hours: hours;
         minutes = minutes < 10 ? '0'+ minutes: minutes;

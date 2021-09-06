@@ -1,7 +1,7 @@
 import React from 'react'
 import MiniGrid from './MiniGrid';
 
-function Grid({puzzle, handleOnChange, pause, hints}) {
+function Grid({puzzle, handleOnChange, pause, hints, gameWon}) {
     return (
         <ul hidden id="main-grid">
             {
@@ -12,12 +12,12 @@ function Grid({puzzle, handleOnChange, pause, hints}) {
                             let pauseClass = '';
                             let disabled = false;
                             let hintStyle = {};
-                            if (pause) {
+                            if (pause || (gameWon !== null)) {
                                 pauseClass = 'blurGrid';
                                 disabled = true;
                             }
                             if (hints[id]) {
-                                hintStyle = {'animation': 'hint 1s', 'backgroundColor': 'peru', 'display': 'flex'};
+                                hintStyle = {'animation': 'hint 1s', 'backgroundColor': 'lightcyan', 'display': 'flex'};
                             }
                             return (
                                 box === '-'

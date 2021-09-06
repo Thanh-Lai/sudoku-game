@@ -5,6 +5,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import Grid from './Grid.js';
 import Header from './Header.js';
 import Controls from './Controls.js';
+import Popup from './Popup.js';
 
 function Sudoku() {
     const [solution, setSolution] = useState([]);
@@ -16,8 +17,9 @@ function Sudoku() {
     const [notesStatus, setNotesStatus] = useState(false);
     const [pause, setPause] = useState(false);
     const [hints, setHints] = useState({});
+    const [gameWon, setGameStatus] = useState(null);
     const timer = useRef(null);
-    let initalBlankBoxs;
+ 
     useEffect(() => {
         createGame();
     },[]);
@@ -40,13 +42,13 @@ function Sudoku() {
         setPuzzle(newPuzzle['board']);
         setEmptyBoxes(newPuzzle['emptyBoxes']);
         setBlankBoxes(newPuzzle['blankBoxes']);
-        initalBlankBoxs = newPuzzle['blankBoxes'];
         handleNotesToggle(true);
-        clearGame(newGame, refreshBoard(newPuzzle['board']));
+        clearGame(newGame, newPuzzle['blankBoxes'], refreshBoard(newPuzzle['board']));
         clearInterval(timer.current);
         setTimer(0); 
         setPause(false);
         setHints({})
+        setGameStatus(null);
         startTimer();
     }
     
@@ -56,17 +58,15 @@ function Sudoku() {
         }, 1000);
     }
 
-    const clearGame = (newGame, newBoard = {}) => {
+    const clearGame = (newGame, blankBoxes={}, newBoard = {}) => {
         for (let id in solutionData) {
             const box = document.getElementById(id);
             box.value = null;
             disableNotes(box,id, true);
         }
         setSolutionData({});
-        setBlankBoxes(initalBlankBoxs);
+        setBlankBoxes(blankBoxes);
         isAutoCorrect(true, true, newGame, newBoard);
-        const msgBox = document.getElementById('message');
-        msgBox.innerText = '';
     }
 
     const refreshBoard = (newPuzzle) => {
@@ -198,12 +198,11 @@ function Sudoku() {
     const isPuzzleComplete = () => {
         if (Object.keys(solutionData).length !== emptyBoxes) return;
         const validSolution = validatePuzzle(convertData()); 
-        const msgBox = document.getElementById('message');
         clearInterval(timer.current);
         if (validSolution) {
-            msgBox.innerText = 'congrats';
+            setGameStatus(true);
         } else {
-            msgBox.innerText = 'fail';
+            setGameStatus(false);
         }
     }
     
@@ -300,7 +299,7 @@ function Sudoku() {
     }
 
     const pausePlay = pause ? 'Play' : 'Pause';
-
+    const disableBtns = gameWon !== null ? true : false;
     return (
         <div>
             <Header/>
@@ -315,16 +314,15 @@ function Sudoku() {
                 pause={pause}
                 handleOnChange={handleOnChange}
                 hints={hints}
+                gameWon={gameWon}
             />
             <div>
-                <button onClick={() => createGame('easy', true)}>New Game</button>
-                <button onClick={() => clearGame(false)}>Clear</button>
-                <button onClick={handlePause}>{pausePlay}</button>
-                <button onClick={handleHint}>Hint</button>
+                <button disabled= {disableBtns} onClick={() => createGame('test', true)}>New Game</button>
+                <button disabled= {disableBtns} onClick={() => clearGame(false, blankBoxes)}>Clear</button>
+                <button disabled= {disableBtns} onClick={handlePause}>{pausePlay}</button>
+                <button disabled= {disableBtns} onClick={handleHint}>Hint</button>
             </div>
-            <div id='message'>
-
-            </div>
+            <Popup newGame={createGame} gameWon={gameWon} time={time}/>
         </div>
     );
 }

@@ -78,12 +78,12 @@
         width: 30px;
         height: 8px;
     }
-}
-
-@media screen and (max-width:550px) {
     #main-grid {
         grid-template-columns: repeat(9, 2.5em);
         grid-template-rows: repeat(9, 2.5em);
+    }
+    .modal-content {
+        top: 40% !important;
     }
 }
 
@@ -100,6 +100,9 @@
     }
     #main-grid {
         margin-top: 10px;
+    }
+    .modal-content {
+        top: 30% !important;
     }
 }
 
@@ -130,5 +133,8 @@
     }
     #controls {
         display: inline-block !important;
+    }
+    .modal_content {
+        top: 30% !important;
     }
 }
