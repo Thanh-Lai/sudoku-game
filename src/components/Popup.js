@@ -1,5 +1,6 @@
 import React from 'react';
 import '../styles/Popup.css';
+import '../styles/Responsive.css';
 
 function Popup({newGame, gameWon, time}) {
     let date = new Date(time * 1000);
@@ -29,7 +30,7 @@ function Popup({newGame, gameWon, time}) {
                     <div className="modal-content">
                         <div>{message}</div>
                         <div><strong>Time: </strong>{timeGetter()}</div>
-                        <button className="popup-btn" onClick={() => newGame('test', true)}>New Game</button>
+                        <button className="popup-btn buttons" onClick={() => newGame('easy', true)}>New Game</button>
                     </div> 
                     :
                     null

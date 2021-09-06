@@ -66,6 +66,10 @@
         grid-template-columns: repeat(9, 11vw);
         grid-template-rows: repeat(9, 11vw);
     }
+    .buttons {
+        font-size: 12px;
+        width: 130px;
+    }
 }
 
 @media screen and (max-width:550px) {
@@ -84,6 +88,12 @@
     }
     .modal-content {
         top: 40% !important;
+    }
+    .buttons {
+        padding: 5px 32px;
+        font-size: 10px;
+        margin: 4px 1px;
+        width: 120px;
     }
 }
 

@@ -317,10 +317,10 @@ function Sudoku() {
                 gameWon={gameWon}
             />
             <div>
-                <button disabled= {disableBtns} onClick={() => createGame('test', true)}>New Game</button>
-                <button disabled= {disableBtns} onClick={() => clearGame(false, blankBoxes)}>Clear</button>
-                <button disabled= {disableBtns} onClick={handlePause}>{pausePlay}</button>
-                <button disabled= {disableBtns} onClick={handleHint}>Hint</button>
+                <button className='buttons' disabled= {disableBtns} onClick={() => createGame('easy', true)}>New Game</button>
+                <button className='buttons' disabled= {disableBtns} onClick={() => clearGame(false, blankBoxes)}>Clear</button>
+                <button className='buttons' disabled= {disableBtns} onClick={handlePause}>{pausePlay}</button>
+                <button className='buttons' disabled= {disableBtns} onClick={handleHint}>Hint</button>
             </div>
             <Popup newGame={createGame} gameWon={gameWon} time={time}/>
         </div>

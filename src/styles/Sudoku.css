@@ -136,3 +136,23 @@ input::-webkit-inner-spin-button {
 input[type=number] {
   -moz-appearance: textfield;
 }
+
+.buttons {
+    border: none;
+    background-color: #e7e7e7;
+    padding: 10px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 15px;
+    margin: 4px 2px;
+    transition-duration: 0.3s;
+    cursor: pointer;
+    width: 140px;
+    border-radius: 25px;
+}
+
+.buttons:hover {
+    background-color: #2196F3;
+    color: white;
+  }
