@@ -263,24 +263,9 @@ function Sudoku() {
         }
     }
 
-    const countCorrect = function() {
-        let count = 0;
-        for (let key in solutionData) {
-            const idxs = key.split('-');
-            const row = idxs[0];
-            const col = idxs[1];
-            if (solution[row][col] === solutionData[key]['value']) {
-                count += 1;
-            }
-        }
-        return count;
-    }
-
     const handleHint = function() {
         let currBlanks = Object.values(blankBoxes);
-        let currBoxes = emptyBoxes - countCorrect();
-
-        if (currBoxes === 1) return;
+        if (currBlanks.length === 1) return;
         let blank = currBlanks.splice(Math.floor(Math.random() * currBlanks.length),1)[0];
         if (!blank) return;
         let i = blank[0];
@@ -290,7 +275,6 @@ function Sudoku() {
         hints[key] = puzzle[i][j] = solution[i][j];
         delete solutionData[key];
         delete blankBoxes[key];
-        currBoxes -= 1;
         setHints(hints);
         setPuzzle(puzzle);
         setEmptyBoxes(emptyBoxes-1);
