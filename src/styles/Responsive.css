@@ -66,6 +66,10 @@
         grid-template-columns: repeat(9, 11vw);
         grid-template-rows: repeat(9, 11vw);
     }
+    .buttons {
+        font-size: 12px;
+        width: 130px;
+    }
 }
 
 @media screen and (max-width:550px) {
@@ -78,12 +82,18 @@
         width: 30px;
         height: 8px;
     }
-}
-
-@media screen and (max-width:550px) {
     #main-grid {
         grid-template-columns: repeat(9, 2.5em);
         grid-template-rows: repeat(9, 2.5em);
+    }
+    .modal-content {
+        top: 40% !important;
+    }
+    .buttons {
+        padding: 5px 32px;
+        font-size: 10px;
+        margin: 4px 1px;
+        width: 120px;
     }
 }
 
@@ -94,12 +104,28 @@
     .mini-grid-inputs {
         bottom: 5px;
     }
+    .control-class {
+        padding: 0px 0px !important;
+        margin: 0px 5px !important;
+    }
+    #main-grid {
+        margin-top: 10px;
+    }
+    .modal-content {
+        top: 30% !important;
+    }
 }
 
 @media screen and (max-width:400px) {
     #main-grid {
         grid-template-columns: repeat(9, 2em);
         grid-template-rows: repeat(9, 2em);
+    }
+    #controls {
+        font-size: 12px;
+    }
+    #maki-kaji {
+        font-size: 12px;
     }
 }
 
@@ -110,5 +136,15 @@
     }
     .notes-grid {
         font-size: 6px;
+    }
+    .control-class {
+        margin: 0 !important;
+        text-align: left;
+    }
+    #controls {
+        display: inline-block !important;
+    }
+    .modal_content {
+        top: 30% !important;
     }
 }

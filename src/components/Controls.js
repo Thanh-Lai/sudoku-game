@@ -6,6 +6,7 @@ function Controls({ selectDifficulty, time, handleAutoCorrect,handleNotes }) {
     let hours = date.getUTCHours();
     let minutes = date.getUTCMinutes();
     let seconds = date.getSeconds();
+    
     const timeGetter = () => {
         hours = hours < 10 ? '0'+ hours: hours;
         minutes = minutes < 10 ? '0'+ minutes: minutes;
@@ -37,7 +38,7 @@ function Controls({ selectDifficulty, time, handleAutoCorrect,handleNotes }) {
                         <span className="slider round"></span>
                     </label>
                 </div>
-                <div id="notes" >
+                <div id="notes" className="control-class">
                     <strong>Notes: </strong>
                     <button id="pencil" onClick={() => handleNotes(false)}>
                         <i className="fa fa-pencil"></i>
