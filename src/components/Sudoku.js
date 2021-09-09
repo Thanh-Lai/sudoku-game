@@ -19,7 +19,7 @@ function Sudoku() {
     const [hints, setHints] = useState({});
     const [gameWon, setGameStatus] = useState(null);
     const timer = useRef(null);
- 
+
     useEffect(() => {
         createGame();
     },[]);
@@ -103,9 +103,6 @@ function Sudoku() {
     const handleOnChange = (e) => {
         let value = e.target.value;
         const id = e.target.id;
-        const key = id.split('-');
-        const i = Number(key[0]);
-        const j = Number(key[1]);
 
         if (!solutionData[id]) {
             solutionData[id] = {};
@@ -120,20 +117,13 @@ function Sudoku() {
         if (!value || value > 9 || value < 1 || !Number.isInteger(Number(value))) {
             input.value = null;
             delete solutionData[id];
-            blankBoxes[id] = [i,j];
         } else {
             input.value = value;
             if (!notesStatus) {
                 solutionData[id]['value'] = Number(value);
                 solutionData[id]['mode'] = 'normal';
-                if (solution[i][j] === Number(value)) {
-                    delete blankBoxes[id];
-                } else {
-                    blankBoxes[id] = [i,j];
-                }
             }
         }
-        setBlankBoxes(blankBoxes);
         setSolutionData(solutionData);
         isPuzzleComplete();
         const isChecked = document.getElementById('auto-correct-check').checked;
