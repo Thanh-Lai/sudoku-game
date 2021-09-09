@@ -47,7 +47,7 @@ function Sudoku() {
         clearInterval(timer.current);
         setTimer(0); 
         setPause(false);
-        setHints({})
+        setHints({});
         setGameStatus(null);
         startTimer();
     }
