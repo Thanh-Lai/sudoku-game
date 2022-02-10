@@ -6,6 +6,8 @@
     , the father of Sudoku (Octorber 8, 1951 - August 10, 2021)
 </p> 
 
+<a hred="https://play-sudoku-08102021.herokuapp.com/" rel="noreferrer" target="_blank">Play Here<a/>
+
 ## A Sudoku player that features all the typical features of a Sudoku game.
 - Change difficulty level
 - Create new game
